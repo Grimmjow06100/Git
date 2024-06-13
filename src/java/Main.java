@@ -1,22 +1,15 @@
-import View.GamePanel;
+import View.GamePanelView;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
-
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-
+import java.awt.*;
 import java.io.IOException;
 
 public class Main extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        GamePanel game=new GamePanel();
+        GamePanelView game=new GamePanelView();
         double width=game.getPrefWidth();
         double height=game.getPrefHeight();
         Scene scene = new Scene(game,width,height);

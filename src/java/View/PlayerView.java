@@ -2,20 +2,21 @@ package View;
 
 
 
-import event.KeyHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import controller.PlayerController;
-import model.entity;
+import model.GameObject;
 
 
 public class PlayerView {
     private PlayerController controller;
-    private GamePanel game;
+    private GamePanelView game;
 
-    public PlayerView(PlayerController controller, GamePanel game) {
+    public PlayerView(PlayerController controller, GamePanelView game, int CharacterId) {
         this.controller= controller;
         this.game = game;
+        getPlayerImage(CharacterId);
+        GameObject.objectList.add(controller.getModel());
     }
 
 
@@ -24,8 +25,9 @@ public class PlayerView {
     }
 
 
-    public void draw(GraphicsContext gc) {
+    public void render(GraphicsContext gc) {
         Image image = null;
+        controller.handleDraw();
         switch (controller.getDirection()) {
             case up:
                 image = controller.getUpFrame().get(controller.getSpriteCounter());
@@ -41,9 +43,32 @@ public class PlayerView {
                 break;
         }
 
-        controller.handleDraw();
-
-        gc.drawImage(image, controller.getX(), controller.getY(), game.getTileSize(), game.getTileSize());
+        gc.drawImage(image, controller.getX(), controller.getY(), 50, 50);
     }
+
+    public void getPlayerImage(int CharacterId){
+        try {
+            for (int i = 1; i < 7; i++) {
+
+                String path = String.format("/character%d/gun/up/character_sprite_%d-removebg-preview.png",CharacterId, i);
+                controller.getUpFrame().add(new Image(getClass().getResource(path).toString()));
+            }
+            for (int i = 1; i < 7; i++) {
+                String path = String.format("/character%d/gun/down/character_sprite_%d-removebg-preview.png", CharacterId,i);
+                controller.getDownFrame().add(new Image(getClass().getResource(path).toString()));
+            }
+            for (int i = 1; i < 7; i++) {
+                String path = String.format("/character%d/gun/left/character_sprite_%d-removebg-preview.png",CharacterId, i);
+                controller.getLeftFrame().add(new Image(getClass().getResource(path).toString()));
+            }
+            for (int i = 1; i < 7; i++) {
+                String path = String.format("/character%d/gun/right/character_sprite_%d-removebg-preview.png",CharacterId, i);
+                controller.getRightFrame().add(new Image(getClass().getResource(path).toString()));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 
