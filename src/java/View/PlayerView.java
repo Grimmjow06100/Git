@@ -2,6 +2,7 @@ package View;
 
 
 
+import Handler.KeyHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import controller.PlayerController;
@@ -11,17 +12,19 @@ import model.GameObject;
 public class PlayerView {
     private PlayerController controller;
     private GamePanelView game;
+    private KeyHandler key;
 
-    public PlayerView(PlayerController controller, GamePanelView game, int CharacterId) {
+    public PlayerView(PlayerController controller, GamePanelView game, int CharacterId, KeyHandler key) {
         this.controller= controller;
         this.game = game;
         getPlayerImage(CharacterId);
-        GameObject.objectList.add(controller.getModel());
+        GameObject.objectList.add(controller.getPlayer());
+        this.key = key;
     }
 
 
     public void update() {
-        controller.update();
+        controller.update(key);
     }
 
 

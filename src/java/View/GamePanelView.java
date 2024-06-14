@@ -37,9 +37,9 @@ public class GamePanelView extends Pane {
     Camera camera;
 
 
-    Player model=new Player();
-    PlayerController controller=new PlayerController(model, key);
-    PlayerView view=new PlayerView(controller,this,1);
+    Player player=new Player();
+    PlayerController controller=new PlayerController(player);
+    PlayerView view=new PlayerView(controller,this,4,key);
 
     public GamePanelView() {
         this.setPrefSize(ScreenWidth, ScreenHeight);

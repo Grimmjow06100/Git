@@ -2,121 +2,81 @@ package controller;
 
 import Handler.KeyHandler;
 import javafx.scene.image.Image;
-import model.GameObject;
 import model.Player;
+
 
 import java.util.ArrayList;
 
 public class PlayerController {
-    private Player model;
-    private KeyHandler keyHandler;
+    private Player player;
 
-    public PlayerController(Player model, KeyHandler keyHandler) {
-        this.model = model;
-        this.keyHandler = keyHandler;
+
+    public PlayerController(Player player) {
+        this.player = player;
     }
 
-    public Player getModel() {
-        return model;
+    public Player getPlayer() {
+        return player;
     }
 
-    public void update(){
-        model.setMoving(false);// Reset the moving flag
-        double x = model.getX();
-        double y = model.getY();
-        double speed = model.getSpeed();
-        collision();
-
-        if (keyHandler.upPressed) {
-            model.setDirection(Player.Direction.up);
-            y -= speed;
-            model.setY(y);
-            model.setMoving(true);
-        }
-        if (keyHandler.downPressed) {
-            model.setDirection(Player.Direction.down);
-            y += speed;
-            model.setY(y);
-            model.setMoving(true);
-        }
-        if (keyHandler.leftPressed) {
-            model.setDirection(Player.Direction.left);
-            x -= speed;
-            model.setX(x);
-            model.setMoving(true);
-        }
-        if (keyHandler.rightPressed) {
-            model.setDirection(Player.Direction.right);
-            x += speed;
-            model.setX(x);
-            model.setMoving(true);
-        }
+    public void update(KeyHandler key){
+        player.update(key);
     }
 
 
     public void handleDraw() {
-        if (model.isMoving()) {
-            model.incrementAnimationCounter();
-            if (model.shouldUpdateSprite()) {
-                model.incrementSpriteCounter();
-                if (model.getSpriteCounter() >= model.getUpFrame().size()) {
-                    model.resetSpriteCounter();
+        if (player.isMoving()) {
+            player.incrementAnimationCounter();
+            if (player.shouldUpdateSprite()) {
+                player.incrementSpriteCounter();
+                if (player.getSpriteCounter() >= player.getUpFrame().size()) {
+                    player.resetSpriteCounter();
                 }
-                model.resetAnimationCounter();
+                player.resetAnimationCounter();
             }
         } else {
-            model.resetSpriteCounter();  // Reset to the first frame when not moving
+            player.resetSpriteCounter();  // Reset to the first frame when not moving
         }
     }
 
-    private void collision() {
-        for(GameObject object : GameObject.objectList) {
-            if(model.getBounds().intersects(object.getBounds())) {
-                System.out.println("Collision");
-                if (object.getId() == GameObject.ID.wall) {
-                    model.setX(model.getX());
-                    model.setY(model.getY());
-                }
-            }
-        }
-    }
+
 
 
 
     public Player.Direction getDirection() {
-        return model.getDirection();
+        return player.getDirection();
     }
 
     public ArrayList<Image> getUpFrame() {
-        return model.getUpFrame();
+        return player.getUpFrame();
     }
 
     public ArrayList<Image> getDownFrame() {
-        return model.getDownFrame();
+        return player.getDownFrame();
     }
 
     public ArrayList<Image> getLeftFrame() {
-        return model.getLeftFrame();
+        return player.getLeftFrame();
     }
 
     public ArrayList<Image> getRightFrame() {
-        return model.getRightFrame();
+        return player.getRightFrame();
     }
      public boolean isMoving() {
-         return model.isMoving();
+         return player.isMoving();
      }
      public int getSpriteCounter() {
-            return model.getSpriteCounter();
+            return player.getSpriteCounter();
     }
     public void incrementSpriteCounter() {
-            model.incrementSpriteCounter();
+            player.incrementSpriteCounter();
     }
 
     public double getX(){
-        return model.getX();
+        return player.getX();
     }
 
     public double getY(){
-        return model.getY();
+        return player.getY();
     }
 }
