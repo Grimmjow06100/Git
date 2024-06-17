@@ -35,15 +35,22 @@ public class Item extends GameObject{
             if(go.getId()== ID.PLAYER){
                 if(this.getBounds().intersects(go.getBounds())){
                     if(this.itemId==ItemID.ManaPotion){
-                        if (((Player)go).mana<200)
-                            ((Player)go).incrementMana(50);
+
+                        ((Player)go).incrementMana(50);
                     }
                     else if(this.itemId==ItemID.HealthPotion){
-                        if(((Player)go).HP<200)
-                            ((Player)go).incrementHP(50);
+
+                        ((Player)go).incrementHP(50);
                     }
                     else if(this.itemId==ItemID.SpeedPotion){
-                        applyTemporaryEffect((Player)go, "speed", 5, 5000);
+                        ((Player)go).setFireSpeed(400);
+
+                        PauseTransition pause = new PauseTransition(Duration.millis(15000));
+                        pause.setOnFinished(event -> {
+                            ((Player)go).setFireSpeed(800);
+
+                        });
+                        pause.play();
 
                     }
                     return true;
@@ -67,22 +74,14 @@ public class Item extends GameObject{
         return new Rectangle(x,y,30,30).getBoundsInLocal();
     }
 
-    private void applyTemporaryEffect(Player player, String effectType, int effectValue, int durationMillis) {
-        switch (effectType) {
-            case "speed":
-                player.incrementSpeed(effectValue);
-                break;
-            // Add cases for other effects if needed
-        }
+    private void applyTemporaryEffect(Player player, int effectValue, int durationMillis) {
+
+        player.setFireSpeed(effectValue);
 
         PauseTransition pause = new PauseTransition(Duration.millis(durationMillis));
         pause.setOnFinished(event -> {
-            switch (effectType) {
-                case "speed":
-                    player.incrementSpeed(-effectValue); // Revert the speed increase
-                    break;
-                // Add cases to revert other effects if needed
-            }
+            player.setFireSpeed(-effectValue);
+
         });
         pause.play();
     }

@@ -56,8 +56,8 @@ public class GamePanelView extends Pane {
         setOnMouseClicked(mouse.getOnMouseClicked());
 
         loadWall(mapLoader);
-        placeEnemies(10);
-        placeItems(10);
+        placeEnemies(20);
+        placeItems(20);
 
     }
 
@@ -85,7 +85,7 @@ public class GamePanelView extends Pane {
     }
     private void loadFloor(Image image) {
         int w = (int) image.getWidth();
-        int h = (int) image.getHeight();
+        int h = (int) 40;
         PixelReader pixelReader = image.getPixelReader();
 
         for (int xx = 0; xx < w; xx++) {
@@ -124,7 +124,7 @@ public class GamePanelView extends Pane {
     public void placeEnemies(int numEnemies) {
         Random rand = new Random();
         int w = (int) mapWidth;
-        int h = (int) mapHeight / 2;
+        int h = (int) mapHeight/2;
         PixelReader pixelReader = map.getPixelReader();
 
         for (int i = 0; i < numEnemies; i++) {
@@ -134,7 +134,7 @@ public class GamePanelView extends Pane {
                 y = rand.nextInt(h);
             } while (isBlockRed(pixelReader, x, y) || isEnemyNearby(x, y));
 
-            Enemy e = new Enemy(x, y);
+            Enemy e = new Enemy(x, y, controller);
             EnemyController c = new EnemyController(e);
             new EnemyView(c);
         }
@@ -143,7 +143,7 @@ public class GamePanelView extends Pane {
     public void placeItems(int numItems) {
         Random rand = new Random();
         int w = (int) mapWidth;
-        int h = (int) mapHeight / 2;
+        int h = (int) mapHeight/2 ;
         PixelReader pixelReader = map.getPixelReader();
 
         for (int i = 0; i < numItems; i++) {

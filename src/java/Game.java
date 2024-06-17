@@ -1,4 +1,3 @@
-import Handler.DragAndDropHandler;
 import Handler.KeyHandler;
 import Handler.MouseHandler;
 import View.*;
@@ -7,10 +6,8 @@ import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import Handler.CameraHandler;
@@ -27,15 +24,13 @@ public class Game extends Application {
     PlayerController controller;
     GamePanelView game;
     PlayerView playerView;
-    DragAndDropHandler dragAndDropHandler;
 
     @Override
     public void start(Stage stage) throws IOException {
         InitGame();
 
         //Creation model
-        Player player=new Player(Player.PlayerID.RAIJIN,key);
-
+        Player player=new Player(Player.PlayerID.AMON,key);
         //Creation du controller
         controller=new PlayerController(player);
 
@@ -43,14 +38,9 @@ public class Game extends Application {
         mouse.setController(controller,key);
 
 
-
-
-
         //Creation des vues
         game = new GamePanelView(controller,gc,mouse,key);
         playerView=new PlayerView(controller,key);
-
-
 
 
         //setup la scene de jeu
@@ -62,9 +52,6 @@ public class Game extends Application {
         double height = game.getPrefHeight();
         Scene scene = new Scene(game, width, height);
         scene.setCursor(targetCursor);
-        // Créer et ajouter les gestionnaires de drag and drop
-        dragAndDropHandler = new DragAndDropHandler(controller, camera);
-        dragAndDropHandler.addDragAndDropHandlers(scene);
 
 
         stage.setTitle("Mage vs Monsters");
@@ -82,6 +69,9 @@ public class Game extends Application {
 
                 // Mettre à jour la map
                 update(gc);
+                if(player.isDead==true){
+                    stop();
+                }
             }
         };
         gameLoop.start();
@@ -111,11 +101,11 @@ public class Game extends Application {
         gc.setFill(Color.GREEN);
         gc.fillRect(5, 5, controller.getHP(),20);
         gc.setFill(Color.WHITE);
-        gc.fillText("HP: " + controller.getHP() , 5,40 );
+        gc.fillText("HP     : " + controller.getHP() , 5,40 );
         gc.setFill(Color.BLUE);
-        gc.fillRect(5, 55, controller.getMana(),20);
+        gc.fillRect(210, 5, controller.getMana(),20);
         gc.setFill(Color.WHITE);
-        gc.fillText("Mana: " + controller.getMana() , 5,90 );
+        gc.fillText("Mana : " + controller.getMana() , 210,40 );
     }
 
 

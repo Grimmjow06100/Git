@@ -1,16 +1,20 @@
 package View;
 
 import controller.BulletController;
+import controller.EnemyBulletController;
 import controller.UltimeController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import model.Player;
 
 public class AttackView extends View {
     BulletController controllerBullet=null;
     UltimeController controllerUltime=null;
+    EnemyBulletController controllerEnnemyBullet=null;
     Image normaleBullet ;
     Image Ultime;
+    Image enemyBullet;
 
 
 
@@ -24,6 +28,11 @@ public class AttackView extends View {
         this.controllerUltime = c;
         View.viewList.add(this);
         LoadImage(id);
+    }
+
+    public AttackView(EnemyBulletController c) {
+        this.controllerEnnemyBullet = c;
+        View.viewList.add(this);
     }
 
 
@@ -45,6 +54,16 @@ public class AttackView extends View {
 
             }
         }
+        else if(controllerEnnemyBullet!=null){
+            controllerEnnemyBullet.update();
+            renderEnnemyBullet(gc);
+            if(controllerEnnemyBullet.getCollision()){
+                View.viewList.remove(this);
+            }
+        }
+        else{
+            System.out.println("Error");
+        }
     }
 
 
@@ -52,8 +71,11 @@ public class AttackView extends View {
         String name=id.name();
         String pathBullet = String.format("/"+name+"/normaleAttack/Attack.png");
         String pathUltime = String.format("/"+name+"/SuperAttack/Attack.png");
+        String pathEnnemyBullet = String.format("/Enemy/Attack/EnemyAttack.png");
         normaleBullet = new Image(getClass().getResource(pathBullet).toString());
         Ultime = new Image(getClass().getResource(pathUltime).toString());
+        enemyBullet=new Image(getClass().getResource(pathEnnemyBullet).toString());
+
     }
 
 
@@ -63,5 +85,8 @@ public class AttackView extends View {
     }
     public void renderUltime(GraphicsContext gc){
         gc.drawImage(Ultime, controllerUltime.getUltimeX(), controllerUltime.getUltimeY(), 200, 200);
+    }
+    public void renderEnnemyBullet(GraphicsContext gc){
+        gc.drawImage(enemyBullet, controllerEnnemyBullet.getX(), controllerEnnemyBullet.getY(), 50, 50);
     }
 }

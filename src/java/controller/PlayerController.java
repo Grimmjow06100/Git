@@ -68,6 +68,10 @@ public class PlayerController {
         return player.HP;
     }
 
+    public int getFireSpeed(){
+        return player.fireSpeed;
+    }
+
     public Player.PlayerID getPlayerID() {
         return player.getPlayerId();
     }

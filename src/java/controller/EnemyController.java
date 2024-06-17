@@ -10,10 +10,10 @@ public class EnemyController {
         this.ennemy = ennemy;
     }
 
-    public double getEnemyX(){
+    public double getX(){
         return ennemy.getX();
     }
-    public double getEnemyY(){
+    public double getY(){
         return ennemy.getY();
     }
 

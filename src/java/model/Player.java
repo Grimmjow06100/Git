@@ -2,9 +2,12 @@ package model;
 
 
 import Handler.KeyHandler;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.geometry.Bounds;
 import javafx.scene.image.Image;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.util.ArrayList;
 
@@ -26,6 +29,7 @@ public class Player extends GameObject {
     private boolean isMoving = false;
 
     public int spriteCounter=0;
+     public boolean isDead=false;
 
 
     private int animationSpeed = 5; // Speed of animation
@@ -33,7 +37,9 @@ public class Player extends GameObject {
 
     public int mana=200;
     public int HP=200;
-    public int speed=4;
+    public int speed=8;
+    public int fireSpeed=800;
+    private Timeline manaRegenTimeline;
 
     public Player(PlayerID id,KeyHandler keyHandler){
         super(100,100);
@@ -44,6 +50,8 @@ public class Player extends GameObject {
         velX=speed;
         velY=speed;
         GameObject.gameObjects.add(this);
+        System.out.println(fireSpeed);
+
     }
 
     public PlayerID getPlayerId() {
@@ -89,6 +97,9 @@ public class Player extends GameObject {
         else if (!keyHandler.leftPressed){
             velX=0;
         }
+        if(HP<=0){
+            isDead=true;
+        }
     }
 
     private void collision(){
@@ -98,31 +109,29 @@ public class Player extends GameObject {
                 y+=velY*-1;
             }
             if(b.getId()==ID.ENEMY && this.getBounds().intersects(b.getBounds())) {
-                HP-=1;
-                System.out.println("HP: "+HP);
+                HP-=5;
+
             }
         }
 
     }
 
+    public void setFireSpeed(int fireSpeed){
+        this.fireSpeed=fireSpeed;
+    }
+
     public int getMana(){
         return mana;
     }
-    public void setMana(int mana){
-        this.mana=mana;
-        System.out.println("Mana: "+mana);
-    }
+
+
     public void incrementMana(int mana){
         this.mana+=mana;
-        System.out.println("Mana: "+this.mana);
+        this.mana = Math.min(this.mana, 200);
     }
     public void incrementHP(int HP){
         this.HP+=HP;
-        System.out.println("HP: "+this.HP);
-    }
-
-    public void incrementSpeed(int speed){
-        this.speed+=speed;
+        this.HP = Math.min(this.HP, 200);
     }
 
 

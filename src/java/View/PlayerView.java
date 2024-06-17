@@ -6,6 +6,7 @@ import Handler.KeyHandler;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import controller.PlayerController;
+import javafx.scene.image.ImageView;
 import model.Player;
 
 
@@ -37,7 +38,6 @@ public class PlayerView extends View {
 
     public void LoadImage(Player.PlayerID id) {
         String name=id.name();
-        System.out.println(name);
         for (int i = 1; i < 6; i++) {
             String path = String.format("/"+name+"/mage%d.png", i);
 

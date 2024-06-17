@@ -12,27 +12,19 @@ public class KeyHandler {
         return event -> {
             if (event.getCode() == KeyCode.Q) {
                 leftPressed = true;
-                downPressed= false;
-                upPressed=false;
-                rightPressed=false;
+
             }
             if (event.getCode() == KeyCode.D) {
                 rightPressed = true;
-                downPressed= false;
-                upPressed=false;
-                leftPressed=false;
+
             }
             if (event.getCode() == KeyCode.Z) {
                 upPressed = true;
-                downPressed= false;
-                rightPressed=false;
-                leftPressed=false;
+
             }
             if (event.getCode() == KeyCode.S) {
                 downPressed = true;
-                upPressed=false;
-                rightPressed=false;
-                leftPressed=false;
+
             }
             if (event.getCode() == KeyCode.A) {
                 APressed = true;

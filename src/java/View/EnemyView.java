@@ -1,17 +1,13 @@
 package View;
 
-import Handler.MouseHandler;
 import controller.EnemyController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
-import javafx.scene.layout.Pane;
 
-
-import java.util.ArrayList;
 
 public class EnemyView extends View{
 
-    Image image;
+    Image EnemyImage=new Image(getClass().getResource("/Enemy/mimic.png").toString());
     EnemyController controller;
 
 
@@ -30,7 +26,7 @@ public class EnemyView extends View{
     }
 
     public void render(GraphicsContext gc){
-        controller.getEnemy().render(gc);
+        gc.drawImage(EnemyImage, controller.getX(), controller.getY(), 50, 50);
     }
 
 
