@@ -2,28 +2,29 @@ package model;
 
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javafx.geometry.Bounds;
+import javafx.scene.canvas.GraphicsContext;
 
 
 public abstract class GameObject {
-    protected double  x,y;
-    protected ID id;
-    public static ArrayList<GameObject> objectList = new ArrayList<GameObject>();
-
-
-
-    public GameObject(double x, double y,ID id) {
-        this.x = x;
-        this.y = y;
-        this.id = id;
-    }
-
-
-
     public enum ID{
-        player,enemy,wall,item,bullet;
+        PLAYER,ENEMY,BULLET, BLOCK,UlTIME,ITEM
     }
+
+    public static CopyOnWriteArrayList<GameObject> gameObjects = new CopyOnWriteArrayList<>();
+
+    protected double  x,y;
+    protected double velX,velY;
+    protected ID id;
+
+    GameObject(double x,double y){
+        this.x=x;
+        this.y=y;
+    }
+
 
     public void setX(double x) {
         this.x = x;
@@ -40,9 +41,11 @@ public abstract class GameObject {
         return y;
     }
 
+
+    public abstract Bounds getBounds();
+
     public ID getId() {
         return id;
     }
 
-    public abstract Bounds getBounds();
 }

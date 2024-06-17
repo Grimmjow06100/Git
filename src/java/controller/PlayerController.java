@@ -2,6 +2,8 @@ package controller;
 
 import Handler.KeyHandler;
 import javafx.scene.image.Image;
+import model.Block;
+import model.GameObject;
 import model.Player;
 
 
@@ -11,7 +13,7 @@ public class PlayerController {
     private Player player;
 
 
-    public PlayerController(Player player) {
+    public PlayerController(Player player){
         this.player = player;
     }
 
@@ -19,9 +21,14 @@ public class PlayerController {
         return player;
     }
 
-    public void update(KeyHandler key){
-        player.update(key);
+    public void updatePlayer(KeyHandler key){
+        player.update();
+
     }
+
+
+
+
 
 
     public void handleDraw() {
@@ -29,7 +36,7 @@ public class PlayerController {
             player.incrementAnimationCounter();
             if (player.shouldUpdateSprite()) {
                 player.incrementSpriteCounter();
-                if (player.getSpriteCounter() >= player.getUpFrame().size()) {
+                if (player.getSpriteCounter() >= player.getFrame().size()) {
                     player.resetSpriteCounter();
                 }
                 player.resetAnimationCounter();
@@ -41,36 +48,37 @@ public class PlayerController {
 
 
 
-
-
     public Player.Direction getDirection() {
         return player.getDirection();
     }
 
-    public ArrayList<Image> getUpFrame() {
-        return player.getUpFrame();
+    public ArrayList<Image> getFrame() {
+        return player.getFrame();
     }
 
-    public ArrayList<Image> getDownFrame() {
-        return player.getDownFrame();
+    public int getMana() {
+        return player.getMana();
     }
 
-    public ArrayList<Image> getLeftFrame() {
-        return player.getLeftFrame();
+    public void incrementMana(int mana) {
+        player.incrementMana(mana);
     }
 
-    public ArrayList<Image> getRightFrame() {
-        return player.getRightFrame();
+    public int getHP() {
+        return player.HP;
     }
-     public boolean isMoving() {
-         return player.isMoving();
-     }
+
+    public Player.PlayerID getPlayerID() {
+        return player.getPlayerId();
+    }
+
+
+
      public int getSpriteCounter() {
             return player.getSpriteCounter();
     }
-    public void incrementSpriteCounter() {
-            player.incrementSpriteCounter();
-    }
+
+
 
     public double getX(){
         return player.getX();
@@ -79,4 +87,10 @@ public class PlayerController {
     public double getY(){
         return player.getY();
     }
+
+    public void teleportPlayer(double x, double y){
+        player.setY(y);
+        player.setX(x);
+    }
+
 }

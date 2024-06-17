@@ -8,86 +8,121 @@ import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 
+
 public class Player extends GameObject {
 
     public enum Direction{
         up,down,left,right
     }
 
-    private double speedX,speedY;
+    public enum PlayerID{
+        AMON,RAIJIN,BRUNO
+    }
+    private PlayerID playerId;
+    private KeyHandler keyHandler;
     private Direction direction;
-    private ArrayList<Image> upFrame = new ArrayList<>();
-    private ArrayList<Image> downFrame = new ArrayList<>();
-    private ArrayList<Image> leftFrame = new ArrayList<>();
-    private ArrayList<Image> rightFrame = new ArrayList<>();
+    private ArrayList<Image> Frame = new ArrayList<>();
+
     private boolean isMoving = false;
 
     public int spriteCounter=0;
-    public int spriteNumber=1;
 
 
     private int animationSpeed = 5; // Speed of animation
     private int animationCounter = 0; // Counter to control the animation speed
 
-    public Player() {
-        super(100,100,ID.player);
-        direction = Direction.left;
-        speedY=5;
-        speedX=5;
+    public int mana=200;
+    public int HP=200;
+    public int speed=4;
 
+    public Player(PlayerID id,KeyHandler keyHandler){
+        super(100,100);
+        this.id=ID.PLAYER;
+        this.playerId=id;
+        direction = Direction.left;
+        this.keyHandler = keyHandler;
+        velX=speed;
+        velY=speed;
+        GameObject.gameObjects.add(this);
     }
-    public void update(KeyHandler keyHandler){
+
+    public PlayerID getPlayerId() {
+        return playerId;
+    }
+
+    public void update() {
         isMoving=false;// Reset the moving flag
-        x+=speedX;
-        y+=speedY;
+        x+=velX;
+        y+=velY;
         collision();
         if (keyHandler.upPressed) {
             direction= Direction.up;
-            speedY = -5;
+            velY = -speed;
             isMoving=true;
         }
         else if(!keyHandler.downPressed){
-            speedY=0;
+            velY=0;
         }
         if (keyHandler.downPressed) {
             direction= Direction.down;
-            speedY= 5;
+            velY= speed;
             isMoving=true;
         }
         else if (!keyHandler.upPressed){
-            speedY=0;
+            velY=0;
         }
         if (keyHandler.leftPressed) {
             direction= Direction.left;
-            speedX = -5;
+            velX = -speed;
             isMoving=true;
 
         }
         else if (!keyHandler.rightPressed){
-            speedX=0;
+            velX=0;
         }
         if (keyHandler.rightPressed) {
             direction= Direction.right;
-            speedX = 5;
+            velX = speed;
             isMoving=true;
 
         }
         else if (!keyHandler.leftPressed){
-            speedX=0;
+            velX=0;
         }
     }
 
-    private void collision() {
-        for(GameObject object : GameObject.objectList) {
-            if(object!= this && this.getBounds().intersects(object.getBounds())) {
-                if (object.getId() == GameObject.ID.wall) {
-                    x+=speedX*-1;
-                    y+=speedY*-1;
-
-                }
+    private void collision(){
+        for(GameObject b : GameObject.gameObjects){
+            if(b.getId()==ID.BLOCK && this.getBounds().intersects(b.getBounds())) {
+                x+=velX*-1;
+                y+=velY*-1;
+            }
+            if(b.getId()==ID.ENEMY && this.getBounds().intersects(b.getBounds())) {
+                HP-=1;
+                System.out.println("HP: "+HP);
             }
         }
 
+    }
+
+    public int getMana(){
+        return mana;
+    }
+    public void setMana(int mana){
+        this.mana=mana;
+        System.out.println("Mana: "+mana);
+    }
+    public void incrementMana(int mana){
+        this.mana+=mana;
+        System.out.println("Mana: "+this.mana);
+    }
+    public void incrementHP(int HP){
+        this.HP+=HP;
+        System.out.println("HP: "+this.HP);
+    }
+
+    public void incrementSpeed(int speed){
+        this.speed+=speed;
     }
 
 
@@ -97,20 +132,8 @@ public class Player extends GameObject {
         return direction;
     }
 
-    public ArrayList<Image> getUpFrame() {
-        return upFrame;
-    }
-
-    public ArrayList<Image> getDownFrame() {
-        return downFrame;
-    }
-
-    public ArrayList<Image> getLeftFrame() {
-        return leftFrame;
-    }
-
-    public ArrayList<Image> getRightFrame() {
-        return rightFrame;
+    public ArrayList<Image> getFrame() {
+        return Frame;
     }
 
     public boolean isMoving() {
@@ -141,34 +164,8 @@ public class Player extends GameObject {
         return spriteCounter;
     }
 
-
-    public void setMoving(boolean b) {
-        isMoving=b;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
-
-    public ID getId() {
-        return id;
-    }
-
-    public double getSpeedY() {
-        return speedY;
-    }
-    public double getSpeedX() {
-        return speedX;
-    }
-    public void setSpeedX(double speedX) {
-        this.speedX = speedX;
-    }
-    public void setSpeedY(double speedY) {
-        this.speedY = speedY;
-    }
-
     @Override
     public Bounds getBounds() {
-        return new Rectangle(x,y,50,50).getBoundsInLocal();
+        return new Rectangle(x,y,70,70).getBoundsInLocal();
     }
 }

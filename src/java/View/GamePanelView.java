@@ -1,95 +1,109 @@
 package View;
 
-import controller.PlayerController;
+import Handler.MouseHandler;
 import Handler.KeyHandler;
-import javafx.animation.AnimationTimer;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
+import controller.ItemController;
+import controller.PlayerController;
+import controller.EnemyController;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.image.PixelReader;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import jdk.jfr.internal.tool.Main;
-import model.Camera;
+import model.*;
 import model.GameObject;
-import model.Player;
-import model.Block;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
+import java.util.Random;
 
 public class GamePanelView extends Pane {
 
-    public final static  int ScreenWidth = 960;
-    public final  static int ScreenHeight = 576;
+    public final static int ScreenWidth = 960;
+    public final static int ScreenHeight = 576;
     public final static int mapWidth = 3200;
     public final static int mapHeight = 3200;
     public final static int blockSize = 50;
 
-    Image map=new Image(getClass().getResource("/Map/GameMap.png").toString(),mapWidth,mapHeight,false,false);
+    Image mapLoader = new Image(getClass().getResource("/Map/GameMap.png").toString());
+    Image map = new Image(getClass().getResource("/Map/GameMap.png").toString(), mapWidth, mapHeight, false, false);
+    Image floorTexture = new Image(getClass().getResource("/Map/floorTexture.png").toString(), blockSize, blockSize, false, false);
+    Image wallTexture = new Image(getClass().getResource("/Map/wallTexture.png").toString(), blockSize, blockSize, false, false);
 
-
-
-    KeyHandler key=new KeyHandler();
-    Canvas canva;
+    KeyHandler key;
+    MouseHandler mouse;
     GraphicsContext gc;
-    Camera camera;
+    PlayerController controller;
+    Canvas canvas;
 
-
-    Player player=new Player();
-    PlayerController controller=new PlayerController(player);
-    PlayerView view=new PlayerView(controller,this,4,key);
-
-    public GamePanelView() {
+    public GamePanelView(PlayerController c, GraphicsContext gc, MouseHandler mouse, KeyHandler key){
         this.setPrefSize(ScreenWidth, ScreenHeight);
-        this.setBackground(new Background(new BackgroundFill(Color.BLACK, CornerRadii.EMPTY, javafx.geometry.Insets.EMPTY)));
-        canva = new Canvas(ScreenWidth, ScreenHeight);
-        gc = canva.getGraphicsContext2D();
-        camera=new Camera(0,0);
-        this.getChildren().add(canva);
+        this.gc = gc;
+        this.mouse = mouse;
+        this.key = key;
+        this.controller = c;
+
+        canvas = new Canvas(ScreenWidth,ScreenHeight);
+        this.gc = canvas.getGraphicsContext2D();
+        getChildren().add(canvas);
+
         setOnKeyPressed(key.getOnKeyPressedHandler());
         setOnKeyReleased(key.getOnKeyReleasedHandler());
-        loadMap(map);
+        setOnMouseClicked(mouse.getOnMouseClicked());
 
-
+        loadWall(mapLoader);
+        placeEnemies(10);
+        placeItems(10);
 
     }
 
-    public void startGameThread() {
-        AnimationTimer gameLoop = new AnimationTimer() {
-            @Override
-            public void handle(long now) {
-                // Mettre à jour les informations du jeu
-                update();
+    public void render() {
+        gc.clearRect(0, 0, ScreenWidth, ScreenHeight);
+        gc.drawImage(map, 0, 0, mapWidth, mapHeight);
+        loadFloor(mapLoader);
+    }
 
-                // Dessiner l'écran
-                paint(gc);
+    private void loadWall(Image image) {
+        int w = (int) image.getWidth();
+        int h = (int) image.getHeight();
+        PixelReader pixelReader = image.getPixelReader();
+        for (int xx = 0; xx < w; xx++) {
+            for (int yy = 0; yy < h; yy ++) {
+                   int pixel = pixelReader.getArgb(xx, yy);
+                   int red = (pixel >> 16) & 0x000000FF;
+                   int green = (pixel >> 8) & 0x000000FF;
+                   int blue = (pixel) & 0x000000FF;
+                     if (red == 255 && green == 0 && blue == 0)
+                         new Block(xx*blockSize, yy*blockSize);
+
             }
-        };
-        gameLoop.start();
+        }
     }
-
-
-    public void update() {
-        view.update();
-        camera.update(GameObject.objectList.get(0));
-    }
-
-    public void loadMap(Image image) {
+    private void loadFloor(Image image) {
         int w = (int) image.getWidth();
         int h = (int) image.getHeight();
         PixelReader pixelReader = image.getPixelReader();
 
-        for (int x = 0; x < w; x += blockSize) {
-            for (int y = 0; y < h; y += blockSize) {
-                if (isBlockRed(pixelReader, x, y)) {
-                    Block wall = new Block(x, y, GameObject.ID.wall);
-                    GameObject.objectList.add(wall);
+        for (int xx = 0; xx < w; xx++) {
+            for (int yy = 0; yy < h; yy++) {
+                int pixel = pixelReader.getArgb(xx, yy);
+                int red = (pixel >> 16) & 0x000000FF;
+                int green = (pixel >> 8) & 0x000000FF;
+                int blue = (pixel) & 0x000000FF;
+
+                if (red == 0 && green == 0 && blue == 0) {
+                    gc.drawImage(floorTexture, xx * blockSize, yy * blockSize, blockSize, blockSize);
                 }
+                else {
+                    gc.drawImage(wallTexture, xx * blockSize, yy * blockSize, blockSize, blockSize);
+                }
+
             }
         }
-        System.out.println(GameObject.objectList.size());
     }
 
     private boolean isBlockRed(PixelReader pixelReader, int startX, int startY) {
@@ -107,28 +121,79 @@ public class GamePanelView extends Pane {
         return false;
     }
 
-    // DRAW : THE SCREEN
-    public void paint(GraphicsContext gc) {
-        // Effacer le canvas
-        gc.clearRect(0, 0, ScreenWidth, ScreenHeight);
+    public void placeEnemies(int numEnemies) {
+        Random rand = new Random();
+        int w = (int) mapWidth;
+        int h = (int) mapHeight / 2;
+        PixelReader pixelReader = map.getPixelReader();
 
-        gc.translate(-camera.getX(),-camera.getY());
+        for (int i = 0; i < numEnemies; i++) {
+            int x, y;
+            do {
+                x = rand.nextInt(w);
+                y = rand.nextInt(h);
+            } while (isBlockRed(pixelReader, x, y) || isEnemyNearby(x, y));
 
-        // Dessiner la carte à sa taille d'origine mais elle sera mise à l'échelle par la transformation
-        if (map != null) {
-            gc.drawImage(map, 0, 0);
+            Enemy e = new Enemy(x, y);
+            EnemyController c = new EnemyController(e);
+            new EnemyView(c);
         }
+    }
 
+    public void placeItems(int numItems) {
+        Random rand = new Random();
+        int w = (int) mapWidth;
+        int h = (int) mapHeight / 2;
+        PixelReader pixelReader = map.getPixelReader();
 
-        view.render(gc);
+        for (int i = 0; i < numItems; i++) {
+            int x, y;
+            do {
+                x = rand.nextInt(w);
+                y = rand.nextInt(h);
+            } while (isBlockRed(pixelReader, x, y) || isItemNearby(x, y));
+            Item.ItemID it = Item.ItemID.values()[rand.nextInt(Item.ItemID.values().length)];
+            Item item = new Item(x, y, it);
+            ItemController c = new ItemController(item);
+            new ItemView(c, controller);
+        }
+    }
 
-        gc.translate(camera.getX(),camera.getY());
+    private boolean isEnemyNearby(int x, int y) {
+        for (GameObject obj : GameObject.gameObjects) {
+            if (obj.getId() == GameObject.ID.ENEMY) {
+                Enemy enemy = (Enemy) obj;
+                int deltaX = (int) Math.abs(enemy.getX() - x);
+                int deltaY = (int) Math.abs(enemy.getY() - y);
+                if (deltaX < blockSize * 4 && deltaY < blockSize * 4) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isItemNearby(int x, int y) {
+        for (GameObject obj : GameObject.gameObjects) {
+            if (obj.getId() == GameObject.ID.ITEM) {
+                Item potion = (Item) obj;
+                int deltaX = (int) Math.abs(potion.getX() - x);
+                int deltaY = (int) Math.abs(potion.getY() - y);
+                if (deltaX < blockSize * 4 && deltaY < blockSize * 4) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public Image getMap(){
+        return map;
     }
 
 
 
-
-    public static void main(String[] args){
-        Main.main(args);
+    public GraphicsContext getGraphicsContext() {
+        return gc;
     }
 }
