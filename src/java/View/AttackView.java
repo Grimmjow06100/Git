@@ -33,6 +33,7 @@ public class AttackView extends View {
     public AttackView(EnemyBulletController c) {
         this.controllerEnnemyBullet = c;
         View.viewList.add(this);
+        LoadImage(Player.PlayerID.AMON);
     }
 
 
@@ -87,6 +88,6 @@ public class AttackView extends View {
         gc.drawImage(Ultime, controllerUltime.getUltimeX(), controllerUltime.getUltimeY(), 200, 200);
     }
     public void renderEnnemyBullet(GraphicsContext gc){
-        gc.drawImage(enemyBullet, controllerEnnemyBullet.getX(), controllerEnnemyBullet.getY(), 50, 50);
+        gc.drawImage(enemyBullet, controllerEnnemyBullet.getX(), controllerEnnemyBullet.getY(), 30, 30);
     }
 }

@@ -34,6 +34,12 @@ public class EnemyBullet extends GameObject {
             if(go.getId()== GameObject.ID.PLAYER){
                 if(this.getBounds().intersects(go.getBounds())){
                     ((Player) go).HP-=30;
+                    ((Player)go).HP = Math.max(((Player)go).HP, 0);
+                    return true;
+                }
+            }
+            if(go.getId()== ID.UlTIME){
+                if(this.getBounds().intersects(go.getBounds())){
                     return true;
                 }
             }
@@ -47,8 +53,5 @@ public class EnemyBullet extends GameObject {
         return new Rectangle(x,y,20,20).getBoundsInLocal();
     }
 
-    public void render(GraphicsContext gc){
-        gc.setFill(Color.RED);
-        gc.fillOval(x, y, 10, 10);
-    }
+
 }

@@ -73,6 +73,7 @@ public class Enemy extends GameObject{
         if (hp<=0) {
             GameObject.gameObjects.remove(this);
             MustRemove=true;
+            player.EnemyKilled();
         }
 
     }

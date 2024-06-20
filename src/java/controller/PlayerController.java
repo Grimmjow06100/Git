@@ -68,6 +68,14 @@ public class PlayerController {
         return player.HP;
     }
 
+    public void EnemyKilled(){
+        player.EnemyKilled();
+    }
+
+    public int getEnemyNumber(){
+        return player.EnemyNumber;
+    }
+
     public int getFireSpeed(){
         return player.fireSpeed;
     }

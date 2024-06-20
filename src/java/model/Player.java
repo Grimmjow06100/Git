@@ -35,11 +35,11 @@ public class Player extends GameObject {
     private int animationSpeed = 5; // Speed of animation
     private int animationCounter = 0; // Counter to control the animation speed
 
-    public int mana=200;
+    public int mana=100;
     public int HP=200;
-    public int speed=8;
+    public int speed=6;
     public int fireSpeed=800;
-    private Timeline manaRegenTimeline;
+    public int EnemyNumber;
 
     public Player(PlayerID id,KeyHandler keyHandler){
         super(100,100);
@@ -49,8 +49,8 @@ public class Player extends GameObject {
         this.keyHandler = keyHandler;
         velX=speed;
         velY=speed;
+        EnemyNumber=20;
         GameObject.gameObjects.add(this);
-        System.out.println(fireSpeed);
 
     }
 
@@ -58,6 +58,15 @@ public class Player extends GameObject {
         return playerId;
     }
 
+    public void EnemyKilled(){
+        EnemyNumber--;
+    }
+
+
+
+    public void setEnemyNumber(int nbr){
+        EnemyNumber=nbr;
+    }
     public void update() {
         isMoving=false;// Reset the moving flag
         x+=velX;
@@ -110,10 +119,10 @@ public class Player extends GameObject {
             }
             if(b.getId()==ID.ENEMY && this.getBounds().intersects(b.getBounds())) {
                 HP-=5;
+                HP= Math.max(HP, 0);
 
             }
         }
-
     }
 
     public void setFireSpeed(int fireSpeed){
@@ -175,6 +184,6 @@ public class Player extends GameObject {
 
     @Override
     public Bounds getBounds() {
-        return new Rectangle(x,y,70,70).getBoundsInLocal();
+        return new Rectangle(x,y,50,50).getBoundsInLocal();
     }
 }

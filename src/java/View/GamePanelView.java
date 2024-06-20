@@ -40,6 +40,7 @@ public class GamePanelView extends Pane {
     PlayerController controller;
     Canvas canvas;
 
+
     public GamePanelView(PlayerController c, GraphicsContext gc, MouseHandler mouse, KeyHandler key){
         this.setPrefSize(ScreenWidth, ScreenHeight);
         this.gc = gc;
@@ -56,8 +57,8 @@ public class GamePanelView extends Pane {
         setOnMouseClicked(mouse.getOnMouseClicked());
 
         loadWall(mapLoader);
-        placeEnemies(20);
-        placeItems(20);
+        placeEnemies(controller.getEnemyNumber());
+        placeItems(10);
 
     }
 
@@ -161,11 +162,10 @@ public class GamePanelView extends Pane {
 
     private boolean isEnemyNearby(int x, int y) {
         for (GameObject obj : GameObject.gameObjects) {
-            if (obj.getId() == GameObject.ID.ENEMY) {
-                Enemy enemy = (Enemy) obj;
-                int deltaX = (int) Math.abs(enemy.getX() - x);
-                int deltaY = (int) Math.abs(enemy.getY() - y);
-                if (deltaX < blockSize * 4 && deltaY < blockSize * 4) {
+            if (obj.getId() == GameObject.ID.ENEMY || obj.getId() == GameObject.ID.PLAYER){
+                int deltaX = (int) Math.abs(obj.getX() - x);
+                int deltaY = (int) Math.abs(obj.getY() - y);
+                if (deltaX < blockSize * 6 && deltaY < blockSize * 6) {
                     return true;
                 }
             }
@@ -190,8 +190,6 @@ public class GamePanelView extends Pane {
     public Image getMap(){
         return map;
     }
-
-
 
     public GraphicsContext getGraphicsContext() {
         return gc;

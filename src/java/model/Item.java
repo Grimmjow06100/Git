@@ -45,7 +45,7 @@ public class Item extends GameObject{
                     else if(this.itemId==ItemID.SpeedPotion){
                         ((Player)go).setFireSpeed(400);
 
-                        PauseTransition pause = new PauseTransition(Duration.millis(15000));
+                        PauseTransition pause = new PauseTransition(Duration.millis(10000));
                         pause.setOnFinished(event -> {
                             ((Player)go).setFireSpeed(800);
 

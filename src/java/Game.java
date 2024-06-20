@@ -3,7 +3,7 @@ import Handler.MouseHandler;
 import View.*;
 import controller.PlayerController;
 import javafx.animation.AnimationTimer;
-import javafx.application.Application;
+import javafx.animation.PauseTransition;
 import javafx.scene.ImageCursor;
 import javafx.scene.Scene;
 import javafx.scene.canvas.GraphicsContext;
@@ -14,7 +14,7 @@ import Handler.CameraHandler;
 import model.*;
 import java.io.IOException;
 
-public class Game extends Application {
+public class Game {
 
     GraphicsContext gc ;
     CameraHandler camera;
@@ -22,64 +22,75 @@ public class Game extends Application {
     MouseHandler mouse;
     Image targetImage;
     PlayerController controller;
-    GamePanelView game;
+    GamePanelView GamePanel;
     PlayerView playerView;
+    AnimationTimer gameLoop;
 
-    @Override
-    public void start(Stage stage) throws IOException {
+
+    public void startNewGame(Stage stage) throws IOException {
+
+
         InitGame();
 
         //Creation model
-        Player player=new Player(Player.PlayerID.AMON,key);
+        Player player = new Player(Player.PlayerID.BRUNO, key);
         //Creation du controller
-        controller=new PlayerController(player);
+        controller = new PlayerController(player);
 
         //liaison du model avec le mouseHandler
-        mouse.setController(controller,key);
+        mouse.setController(controller, key);
 
 
         //Creation des vues
-        game = new GamePanelView(controller,gc,mouse,key);
-        playerView=new PlayerView(controller,key);
+        GamePanel = new GamePanelView(controller, gc, mouse, key);
+        playerView = new PlayerView(controller, key);
 
 
         //setup la scene de jeu
-        String path1="/cible1.png";
+        String path1 = "/cible1.png";
         targetImage = new Image(getClass().getResource(path1).toString(), 50, 50, false, false);
         ImageCursor targetCursor = new ImageCursor(targetImage);
 
-        double width = game.getPrefWidth();
-        double height = game.getPrefHeight();
-        Scene scene = new Scene(game, width, height);
+        double width = GamePanel.getPrefWidth();
+        double height = GamePanel.getPrefHeight();
+        Scene scene = new Scene(GamePanel, width, height);
         scene.setCursor(targetCursor);
 
 
         stage.setTitle("Mage vs Monsters");
         stage.setScene(scene);
         stage.show();
-        game.requestFocus();
+        GamePanel.requestFocus();
 
 
-
-        gc=game.getGraphicsContext();
+        gc = GamePanel.getGraphicsContext();
+        PauseTransition pause = new PauseTransition(javafx.util.Duration.seconds(0.5));
         //Boucle de jeu
-        AnimationTimer gameLoop = new AnimationTimer() {
+         gameLoop = new AnimationTimer() {
             @Override
             public void handle(long now) {
-
                 // Mettre à jour la map
                 update(gc);
-                if(player.isDead==true){
-                    stop();
+                if (player.isDead == true) {
+                    pause.play();
+                    pause.setOnFinished(e -> {
+                        stop();
+                        new EndGameWindow(Game.this, stage, "Game Over");
+
+                    });
+                } else if (player.EnemyNumber == 0) {
+
+                    pause.play();
+                    pause.setOnFinished(e -> {
+                        stop();
+                        new EndGameWindow(Game.this, stage, "You Win");
+
+                    });
                 }
             }
         };
         gameLoop.start();
-
-
-
     }
-
 
     public void InitGame() {
          camera=new CameraHandler(0,0);
@@ -91,7 +102,7 @@ public class Game extends Application {
 
         gc.translate(-camera.getX(),-camera.getY());
 
-        game.render();
+        GamePanel.render();
 
         for(View view:View.viewList){
             view.update(gc);
@@ -101,15 +112,15 @@ public class Game extends Application {
         gc.setFill(Color.GREEN);
         gc.fillRect(5, 5, controller.getHP(),20);
         gc.setFill(Color.WHITE);
-        gc.fillText("HP     : " + controller.getHP() , 5,40 );
+        gc.fillText("HP     : " + controller.getHP(),5,40);
         gc.setFill(Color.BLUE);
         gc.fillRect(210, 5, controller.getMana(),20);
         gc.setFill(Color.WHITE);
-        gc.fillText("Mana : " + controller.getMana() , 210,40 );
-    }
+        gc.fillText("Mana : " + controller.getMana() , 210,40);
+        gc.setFill(Color.RED);
+        gc.fillRect(415, 5, controller.getEnemyNumber()*10,20);
+        gc.setFill(Color.WHITE);
+        gc.fillText("Enemy : " + controller.getEnemyNumber() , 415,40);
 
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
