@@ -22,7 +22,7 @@ public class RegleControlleur {
                 FXMLLoader loader = new FXMLLoader();
 
                 // Set the location of the FXML file you want to load
-                loader.setLocation(getClass().getResource("/chooseperso.fxml"));
+                loader.setLocation(getClass().getResource("/FXML/chooseperso.fxml"));
 
                 // Load the FXML file
                 Parent root = loader.load();

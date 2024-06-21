@@ -1,6 +1,5 @@
 package main;
 
-import controller.CharacterPickController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,20 +17,11 @@ public class Main extends Application {
         stage.setTitle("Mage vs Monsters");
 
 
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/chooseperso.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXML/chooseperso.fxml"));
         Parent root= loader.load();
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();
-
-
-        /*FXMLLoader loader = new FXMLLoader(getClass().getResource("/characterPick.fxml"));
-        Parent root= loader.load();
-        CharacterPickController controller=loader.getController();
-        controller.initialize();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();*/
     }
 
 

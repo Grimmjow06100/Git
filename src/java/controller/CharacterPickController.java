@@ -46,7 +46,7 @@ public class CharacterPickController {
                 FXMLLoader loader = new FXMLLoader();
 
                 // Set the location of the FXML file you want to load
-                loader.setLocation(getClass().getResource("/parametres.fxml"));
+                loader.setLocation(getClass().getResource("/FXML/parametres.fxml"));
 
                 // Load the FXML file
                 Parent root = loader.load();
