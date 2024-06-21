@@ -1,3 +1,5 @@
+package main;
+
 import Handler.KeyHandler;
 import Handler.MouseHandler;
 import View.*;
@@ -26,6 +28,12 @@ public class Game {
     PlayerView playerView;
     AnimationTimer gameLoop;
 
+    Player.PlayerID id;
+
+    public Game(Player.PlayerID id) {
+        this.id = id;
+    }
+
 
     public void startNewGame(Stage stage) throws IOException {
 
@@ -33,7 +41,7 @@ public class Game {
         InitGame();
 
         //Creation model
-        Player player = new Player(Player.PlayerID.BRUNO, key);
+        Player player = new Player(id, key);
         //Creation du controller
         controller = new PlayerController(player);
 
@@ -75,16 +83,13 @@ public class Game {
                     pause.play();
                     pause.setOnFinished(e -> {
                         stop();
-                        new EndGameWindow(Game.this, stage, "Game Over");
-
+                        new EndGameWindow(id,stage,"Game Over");
                     });
                 } else if (player.EnemyNumber == 0) {
-
                     pause.play();
                     pause.setOnFinished(e -> {
                         stop();
-                        new EndGameWindow(Game.this, stage, "You Win");
-
+                        new EndGameWindow(id,stage,"You Won!");
                     });
                 }
             }
@@ -117,6 +122,7 @@ public class Game {
         gc.fillRect(210, 5, controller.getMana(),20);
         gc.setFill(Color.WHITE);
         gc.fillText("Mana : " + controller.getMana() , 210,40);
+
         gc.setFill(Color.RED);
         gc.fillRect(415, 5, controller.getEnemyNumber()*10,20);
         gc.setFill(Color.WHITE);

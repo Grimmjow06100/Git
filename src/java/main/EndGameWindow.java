@@ -1,4 +1,5 @@
-import javafx.animation.AnimationTimer;
+package main;
+
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -7,11 +8,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import model.Player;
 
 import java.io.IOException;
 
 public class EndGameWindow {
-    public EndGameWindow(Game game, Stage stage, String message) {
+    public EndGameWindow(Player.PlayerID id,Stage stage, String message) {
         Label label = new Label(message);
         label.setStyle("-fx-font-size: 70px;");
         Button rejouer= new Button("Rejouer");
@@ -27,9 +29,14 @@ public class EndGameWindow {
 
         rejouer.setOnAction(e->{
             try {
+                Game game = new Game(id);
                 game.startNewGame(stage);
             } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                ex.printStackTrace();
+                throw new RuntimeException("IOException occurred", ex);
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new RuntimeException("An unexpected error occurred", ex);
             }
         });
 
