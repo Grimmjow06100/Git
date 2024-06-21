@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="662.0" prefWidth="742.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.CharacterPickController">
    <children>
@@ -15,20 +15,9 @@
          </image>
       </ImageView>
       <Button fx:id="parameter" layoutY="1.0" mnemonicParsing="false" text="Règles" />
-      <MenuBar layoutX="10.0" layoutY="-40.0" prefHeight="30.0" prefWidth="702.0">
-         <menus>
-            <Menu mnemonicParsing="false" text="Quitter" />
-            <Menu fx:id="btnPara" mnemonicParsing="false" text="Paramètres" />
-         </menus>
-      </MenuBar>
       <ImageView fx:id="PlayButton" fitHeight="150.0" fitWidth="142.0" layoutX="304.0" layoutY="487.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../imagejeu/play2.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="356.0" layoutX="183.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../imagejeu/chooseV1.PNG" />
          </image>
       </ImageView>
       <ImageView fx:id="AMON" fitHeight="100.0" fitWidth="100.0" layoutX="183.0" layoutY="361.0" pickOnBounds="true" preserveRatio="true">
@@ -52,5 +41,10 @@
          </image>
       </ImageView>
       <ImageView fx:id="selectedCharacterView" fitHeight="100.0" fitWidth="100.0" layoutX="302.0" layoutY="174.0" pickOnBounds="true" preserveRatio="true" />
+      <Label layoutX="235.0" layoutY="44.0" prefHeight="39.0" prefWidth="276.0" text="Wizard Vs Monster" textFill="#ffffff">
+         <font>
+            <Font name="Book Antiqua" size="30.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>
