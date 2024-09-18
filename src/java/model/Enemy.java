@@ -78,6 +78,10 @@ public class Enemy extends GameObject{
 
     }
 
+    public double getHp(){
+        return hp;
+    }
+
     private void shootAtPlayer() {
         long currentTime = System.currentTimeMillis();
 

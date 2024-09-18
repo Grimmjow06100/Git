@@ -35,7 +35,7 @@
             <Image url="@../RAIJIN/mage1.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="267.0" fitWidth="267.0" layoutX="218.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="267.0" fitWidth="267.0" layoutX="219.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../imagejeu/cadre.png" />
          </image>
@@ -44,6 +44,11 @@
       <Label layoutX="235.0" layoutY="44.0" prefHeight="39.0" prefWidth="276.0" text="Wizard Vs Monster" textFill="#ffffff">
          <font>
             <Font name="Book Antiqua" size="30.0" />
+         </font>
+      </Label>
+      <Label layoutX="195.0" layoutY="106.0" prefHeight="25.0" prefWidth="355.0" text="faites glisser dans le cadre pour sélectionner" textFill="WHITE">
+         <font>
+            <Font size="18.0" />
          </font>
       </Label>
    </children>

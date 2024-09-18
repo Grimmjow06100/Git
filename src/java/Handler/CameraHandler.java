@@ -9,7 +9,6 @@ public class CameraHandler {
     public CameraHandler(double x, double y) {
         this.x = x;
         this.y = y;
-
     }
 
     public void update(GameObject object){

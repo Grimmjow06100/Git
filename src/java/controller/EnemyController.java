@@ -16,6 +16,9 @@ public class EnemyController {
     public double getY(){
         return ennemy.getY();
     }
+    public double getHp(){
+        return ennemy.getHp();
+    }
 
     public Enemy getEnemy(){return ennemy;}
 
